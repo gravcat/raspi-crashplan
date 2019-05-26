@@ -1,4 +1,8 @@
 ## raspi-crashplan
+
+### forked in an effort to support the new Crashplan Small Business 6.9.4
+### should work, but fails at startup
+
 Script for installing CrashPlan on Raspberry Pi
 Tested on Raspberry Pi 3 Model B, running Raspbian "Jessie", with CrashPlan 4.7.0
 
