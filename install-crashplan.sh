@@ -12,24 +12,29 @@
 # - Install packages: libjna-java libswt-gtk-4-java libswt-cairo-gtk-4-jni
 # - Replace CrashPlan's swt.jar with a link to the one from libswt-gtk-4-java
 
+set -e
+
 # Change this for new versions, but this is the version i've tested
-CP=CrashPlan_4.7.0_Linux.tgz
+CRASHPLAN_ARCHIVE_NAME=CrashPlanSmb_6.9.4_1525200006694_502_Linux.tgz
+CRASHPLAN_DOWNLOAD_URL=https://www.crashplanpro.com/client/installers/$CRASHPLAN_ARCHIVE_NAME
 # Change this if you want to install somewhere else, probably should be a
 # command line option
 TARGET=/usr/local/crashplan
 
 # Use /tmp for temporary files... probably should check for free space
 cd /tmp
-if [ ! -f $CP ]; then
-  echo "downloading crashplan from https://download.code42.com/installs/linux/install/CrashPlan/$CP"
-  wget https://download.code42.com/installs/linux/install/CrashPlan/$CP
+if [ ! -f $CRASHPLAN_ARCHIVE_NAME ]; then
+  echo "downloading crashplan from $CRASHPLAN_DOWNLOAD_URL"
+  wget $CRASHPLAN_DOWNLOAD_URL
 fi
 
-echo "unpacking $CP"
-tar xzf $CP
+echo "unpacking $CRASHPLAN_ARCHIVE_NAME"
+tar xzf $CRASHPLAN_ARCHIVE_NAME
+
+sudo apt-get install -y openjdk-8-jdk-headless
 
 cd crashplan-install
-JAVA=`ls /usr/lib/jvm/jdk*/bin/java`
+JAVA=`ls /usr/lib/jvm/*1.8.0*jdk*/bin/java`
 echo "existing java is at $JAVA"
 echo "removing JRE download from install.sh"
 mv install.sh install.sh.orig
@@ -49,8 +54,8 @@ wget "http://www.jonrogers.co.uk/wp-content/uploads/2012/05/libjtux.so"
 sudo mv libjtux.so $TARGET
 
 
-echo "installing libjna-java"
-sudo apt-get install libjna-java libswt-gtk-4-java libswt-cairo-gtk-4-jni
+echo "installing libjna-java, libgconf-2-4"
+sudo apt-get install libjna-java libswt-gtk-4-java libswt-cairo-gtk-4-jni libgconf-2-4 -y
 
 SWT=`ls /usr/lib/java/swt*`
 echo "replacing $TARGET/lib/swt.jar with link to $SWT"
